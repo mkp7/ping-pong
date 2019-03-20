@@ -28,22 +28,31 @@ function draw() {
 
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
-    p1.xPaddle -= 30;
-    socket.emit('key pressed', 'P1LEFT');
+    // p1.xPaddle -= 30;
+    socket.emit('keyPressed', 'P1LEFT');
   }
   
   if (keyCode === RIGHT_ARROW) {
-    p1.xPaddle += 30;
-    socket.emit('key pressed', 'P1RIGHT');
+    // p1.xPaddle += 30;
+    socket.emit('keyPressed', 'P1RIGHT');
   }
 
   if (keyCode === 65) {
-    p2.xPaddle -= 30;
-    socket.emit('key pressed', 'P2LEFT');
+    // p2.xPaddle -= 30;
+    socket.emit('keyPressed', 'P2LEFT');
   }
   
   if (keyCode === 68) {
-    p2.xPaddle += 30;
-    socket.emit('key pressed', 'P1RIGHT');
+    // p2.xPaddle += 30;
+    socket.emit('keyPressed', 'P2RIGHT');
   }
 }
+
+socket.on('P1', (x) => {
+  p1.xPaddle = x
+  console.log(x)
+})
+socket.on('P2', (x) => {
+  p2.xPaddle = x
+  console.log(x)
+})
