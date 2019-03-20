@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Ping Pong game using p5js and socket.io, a project @geekskool",
   "dependencies": {
-    "express": "^4.15.2",
+    "express": "^4.16.4",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
