@@ -2,57 +2,71 @@ const socket = io()
 let started = false
 let paddleWidth = 100
 let paddleHeight = 16
+let whichP = '0'
 
 const p1 = {}
 const p2 = {}
 
 function setup () {
-  createCanvas(640, 480)
+  createCanvas(360, 360)
 }
 
 function draw () {
   background(44)
   if (!started) {
-    p1.xPaddle = 640 / 2
-    p1.yPaddle = 480 - 50
-    p2.xPaddle = 640 / 2
+    p1.xPaddle = 360 / 2
+    p1.yPaddle = 360 - 50
+    p2.xPaddle = 360 / 2
     p2.yPaddle = 50
     started = true
   }
 
-  fill(0, 255, 255)
   noStroke()
-  rect(p1.xPaddle, p1.yPaddle, paddleWidth, paddleHeight)
-  rect(p2.xPaddle, p2.yPaddle, paddleWidth, paddleHeight)
+  if (whichP === '1') {
+    fill(255, 0, 255)
+    rect(p1.xPaddle, p1.yPaddle, paddleWidth, paddleHeight)
+    fill(0, 255, 255)
+    rect(p2.xPaddle, p2.yPaddle, paddleWidth, paddleHeight)
+
+    if (keyIsDown(LEFT_ARROW)) {
+      p1.xPaddle -= 15
+      socket.emit('updateX', `${p1.xPaddle}`)
+    }
+
+    if (keyIsDown(RIGHT_ARROW)) {
+      p1.xPaddle += 15
+      socket.emit('updateX', `${p1.xPaddle}`)
+    }
+  } else if (whichP === '2') {
+    fill(255, 0, 255)
+    rect(p2.xPaddle, p2.yPaddle, paddleWidth, paddleHeight)
+    fill(0, 255, 255)
+    rect(p1.xPaddle, p1.yPaddle, paddleWidth, paddleHeight)
+
+    if (keyIsDown(LEFT_ARROW)) {
+      p2.xPaddle -= 15
+      socket.emit('updateX', `${p2.xPaddle}`)
+    }
+
+    if (keyIsDown(RIGHT_ARROW)) {
+      p2.xPaddle += 15
+      socket.emit('updateX', `${p2.xPaddle}`)
+    }
+  } else {
+    fill(0, 255, 255)
+    rect(p2.xPaddle, p2.yPaddle, paddleWidth, paddleHeight)
+    rect(p1.xPaddle, p1.yPaddle, paddleWidth, paddleHeight)
+  }
 }
 
-function keyPressed () {
-  if (keyCode === LEFT_ARROW) {
-    // p1.xPaddle -= 30;
-    socket.emit('keyPressed', 'P1LEFT')
+socket.on('whichP', (p) => {
+  whichP = p
+  if (p === '1') {
+    socket.on('P2', x => (p2.xPaddle = x))
+  } else if (p === '2') {
+    socket.on('P1', x => (p1.xPaddle = x))
+  } else {
+    socket.on('P2', x => (p2.xPaddle = x))
+    socket.on('P1', x => (p1.xPaddle = x))
   }
-
-  if (keyCode === RIGHT_ARROW) {
-    // p1.xPaddle += 30;
-    socket.emit('keyPressed', 'P1RIGHT')
-  }
-
-  if (keyCode === 65) {
-    // p2.xPaddle -= 30;
-    socket.emit('keyPressed', 'P2LEFT')
-  }
-
-  if (keyCode === 68) {
-    // p2.xPaddle += 30;
-    socket.emit('keyPressed', 'P2RIGHT')
-  }
-}
-
-socket.on('P1', (x) => {
-  p1.xPaddle = x
-  console.log(x)
-})
-socket.on('P2', (x) => {
-  p2.xPaddle = x
-  console.log(x)
 })
