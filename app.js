@@ -15,18 +15,20 @@ const players = {
 }
 
 io.on('connection', function (socket) {
-  if (players.p2) {
+  if (!players.p1) {
     players.p1 = { socket }
     socket.emit('whichP', '1')
     socket.on('updateX', x => io.emit('P1', x))
     socket.on('updateYBall', y => io.emit('P1YBall', y))
     socket.on('updateXBall', x => io.emit('P1XBall', x))
-  } else if (players.p1) {
+    socket.on('updateBall', b => io.emit('P1Ball', b))
+  } else if (!players.p2) {
     players.p2 = { socket }
     socket.emit('whichP', '2')
     socket.on('updateX', x => io.emit('P2', x))
     socket.on('updateYBall', y => io.emit('P2YBall', y))
     socket.on('updateXBall', x => io.emit('P2XBall', x))
+    socket.on('updateBall', b => io.emit('P2Ball', b))
   } else socket.emit('whichP', '3')
 
   console.log('a user connected')
