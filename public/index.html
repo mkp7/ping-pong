@@ -3,18 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/app.css" />
     <title>Ping Pong Game</title>
   </head>
   <body>
+    <!-- <div id="usersignup">
+      <input type="text" id="username" placeholder="select a username" />
+      <button id="signup">Submit</button>
+    </div> -->
+    <div id="player">
+      <input type="text" id="username" placeholder="enter a username" />
+      <button id="signup">SUBMIT</button>
+      <div id="user">mkp7</div>
+      <button id="start-game">start</button>
+      <div class="game-list">
+        <div class="game-list-item">game-1</div>
+        <div class="game-list-item">game-2</div>
+        <div class="game-list-item">game-3</div>
+        <div class="game-list-item">game-4</div>
+      </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/public/p5.min.js"></script>
     <script src="/public/addons/p5.collide2d.min.js"></script>
     <!-- <script src="/public/addons/p5.dom.min.js"></script> -->
     <!-- <script src="/public/addons/p5.sound.min.js"></script> -->
     <script src="/public/app.js"></script>
-    <!-- <div id="usersignup">
-      <input type="text" id="username" placeholder="select a username" />
-      <button id="signup">Submit</button>
-    </div> -->
   </body>
 </html>
