@@ -4,17 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ping Pong Game</title>
+    <link rel="stylesheet" href="/public/app.css">
   </head>
   <body>
+    <div id="xdata">
+        <input type="text" id="game-id" placeholder="enter a game id" autocomplete="off" />
+        <button id="enter-game">join game</button>
+        <button id="new-game">new game</button>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/public/p5.min.js"></script>
-    <script src="/public/addons/p5.collide2d.min.js"></script>
+    <!-- <script src="/public/addons/p5.collide2d.min.js"></script> -->
     <!-- <script src="/public/addons/p5.dom.min.js"></script> -->
     <!-- <script src="/public/addons/p5.sound.min.js"></script> -->
     <script src="/public/app.js"></script>
-    <!-- <div id="usersignup">
-      <input type="text" id="username" placeholder="select a username" />
-      <button id="signup">Submit</button>
-    </div> -->
   </body>
 </html>

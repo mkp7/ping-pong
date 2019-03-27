@@ -1,0 +1,33 @@
+/* style.css */
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #222;
+  display: flex;
+  flex-direction: column;
+
+  /* This centers our sketch horizontally. */
+  justify-content: center;
+
+  /* This centers our sketch vertically. */
+  align-items: center;
+}
+
+* {
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#xdata {
+  display: flex;
+  flex-direction: column;
+}
+
+/* #game-id, #new-game {
+  flex: 1;
+} */

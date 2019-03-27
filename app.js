@@ -9,27 +9,52 @@ app.get('/', function (req, res) {
   res.sendFile(`${__dirname}/public/index.html`)
 })
 
-const players = {
-  p1: false,
-  p2: false
+const games = {}
+
+function getId (length) {
+  const idArr = Array(length)
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+
+  for (let i = 0; i < length; i++) {
+    idArr[i] = chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+
+  if (games[idArr.join('')] !== undefined) {
+    return getId(length)
+  }
+
+  return idArr.join('')
 }
 
 io.on('connection', function (socket) {
-  if (!players.p1) {
-    players.p1 = { socket }
-    socket.emit('whichP', '1')
-    socket.on('updateX', x => io.emit('P1', x))
-    socket.on('updateYBall', y => io.emit('P1YBall', y))
-    socket.on('updateXBall', x => io.emit('P1XBall', x))
-    socket.on('updateBall', b => io.emit('P1Ball', b))
-  } else if (!players.p2) {
-    players.p2 = { socket }
-    socket.emit('whichP', '2')
-    socket.on('updateX', x => io.emit('P2', x))
-    socket.on('updateYBall', y => io.emit('P2YBall', y))
-    socket.on('updateXBall', x => io.emit('P2XBall', x))
-    socket.on('updateBall', b => io.emit('P2Ball', b))
-  } else socket.emit('whichP', '3')
+  socket.on('newGame', _ => {
+    const id = getId(5)
+    games[id] = {
+      id: id,
+      playerOne: socket
+    }
+    socket.emit('newGame', id)
+  })
+
+  socket.on('enterGame', id => {
+    if (games[id] === undefined) {
+      socket.emit('invalidGame', 0)
+    } else {
+      games[id]['playerTwo'] = socket
+      const startTime = Date.now() + 4000
+      socket.emit('gameJoined', `${id} ${startTime}`)
+      games[id]['playerOne'].emit('playerJoined', `${id} ${startTime}`)
+
+      games[id]['playerTwo'].on('xUpdate', x => games[id]['playerOne'].emit('xUpdate', x))
+      games[id]['playerOne'].on('xUpdate', x => games[id]['playerTwo'].emit('xUpdate', x))
+
+      games[id]['playerTwo'].on('ballUpdate', yc => games[id]['playerOne'].emit('ballUpdate', yc))
+      games[id]['playerOne'].on('ballUpdate', yc => games[id]['playerTwo'].emit('ballUpdate', yc))
+
+      games[id]['playerTwo'].on('lost', _ => games[id]['playerOne'].emit('won', 0))
+      games[id]['playerOne'].on('lost', _ => games[id]['playerTwo'].emit('won', 0))
+    }
+  })
 
   console.log('a user connected')
   socket.on('disconnect', function () {
