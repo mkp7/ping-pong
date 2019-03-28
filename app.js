@@ -13,7 +13,7 @@ const games = {}
 
 function getId (length) {
   const idArr = Array(length)
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+  const chars = 'abcdefghijklmnopqrstuvwxyz'
 
   for (let i = 0; i < length; i++) {
     idArr[i] = chars.charAt(Math.floor(Math.random() * chars.length))
@@ -28,7 +28,7 @@ function getId (length) {
 
 io.on('connection', function (socket) {
   socket.on('newGame', _ => {
-    const id = getId(5)
+    const id = getId(6)
     games[id] = {
       id: id,
       playerOne: socket
@@ -51,8 +51,11 @@ io.on('connection', function (socket) {
       games[id]['playerTwo'].on('ballUpdate', yc => games[id]['playerOne'].emit('ballUpdate', yc))
       games[id]['playerOne'].on('ballUpdate', yc => games[id]['playerTwo'].emit('ballUpdate', yc))
 
-      games[id]['playerTwo'].on('lost', _ => games[id]['playerOne'].emit('won', 0))
-      games[id]['playerOne'].on('lost', _ => games[id]['playerTwo'].emit('won', 0))
+      games[id]['playerTwo'].on('lost', _ => games[id]['playerOne'].emit('lost', 0))
+      games[id]['playerOne'].on('lost', _ => games[id]['playerTwo'].emit('lost', 0))
+
+      games[id]['playerTwo'].on('health', h => games[id]['playerOne'].emit('health', h))
+      games[id]['playerOne'].on('health', h => games[id]['playerTwo'].emit('health', h))
     }
   })
 

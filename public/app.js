@@ -8,32 +8,39 @@ const myP5 = new p5(sk => {
     me: false,
     opponent: false,
     won: false,
+    lost: false,
     startTime: false,
     started: false,
     plOne: {
       hg: 16,
       wd: 80,
       x: gwidth / 2,
-      y: gheight - 16
+      y: gheight - 16,
+      health: 9,
+      scX: 60,
+      scY: gheight - 60 - 34
     },
     plTwo: {
       hg: 16,
       wd: 80,
       x: gwidth / 2,
-      y: 0
+      y: 0,
+      health: 9,
+      scX: 60,
+      scY: 60
     },
     ball: {
       diameter: 30,
       x: 50,
       y: 50,
-      xc: 15,
-      yc: 15
+      xc: 12,
+      yc: 12
     }
   }
   let font
 
   sk.preload = function () {
-    font = sk.loadFont('/public/gomarice_game_music_love.ttf')
+    font = sk.loadFont('/public/neuropol-x-rg.ttf')
   }
 
   sk.setup = () => {
@@ -92,16 +99,25 @@ const myP5 = new p5(sk => {
         game.ball.yc *= -1
       }
 
+      sk.textSize(34)
       // my paddle
       sk.fill(160, 0, 160)
       sk.rect(0, game.me.y, gwidth, game.me.hg)
       sk.fill(255, 0, 255)
       sk.rect(game.me.x, game.me.y, game.me.wd, game.me.hg)
+      sk.text(`${game.me.health}`, game.me.scX, game.me.scY)
       // opponent paddle
       sk.fill(200, 255, 255)
       sk.rect(0, game.opponent.y, gwidth, game.opponent.hg)
       sk.fill(0, 200, 200)
       sk.rect(game.opponent.x, game.opponent.y, game.opponent.wd, game.opponent.hg)
+      sk.text(`${game.opponent.health}`, game.opponent.scX, game.opponent.scY)
+
+      // check the scores
+      if (game.me.health <= 0) {
+        socket.emit('lost', 0)
+        game.lost = true
+      }
 
       // my paddle control
       if (sk.keyIsDown(sk.LEFT_ARROW)) {
@@ -119,26 +135,24 @@ const myP5 = new p5(sk => {
         if (game.ball.y - (game.ball.diameter / 2) <= 16) {
           game.ball.yc *= -1
           socket.emit('ballUpdate', `${game.ball.xc} ${game.ball.yc} ${game.ball.x} ${game.ball.y}`)
-          if (game.ball.x - (game.ball.diameter / 2) < game.me.x ||
-              game.ball.x - (game.ball.diameter / 2) > game.me.x + game.me.wd) {
-            sk.fill(255, 0, 180)
-            sk.textSize(34)
-            sk.text('you lost', 0, 100, sk.width)
-            sk.noLoop()
-            socket.emit('lost', 0)
+
+          // paddle missed, emit score
+          if (game.ball.x < game.me.x ||
+              game.ball.x > game.me.x + game.me.wd) {
+            game.me.health--
+            socket.emit('health', game.me.health)
           }
         }
       } else {
         if (game.ball.y + (game.ball.diameter / 2) >= game.me.y) {
           game.ball.yc *= -1
           socket.emit('ballUpdate', `${game.ball.xc} ${game.ball.yc} ${game.ball.x} ${game.ball.y}`)
-          if (game.ball.x + (game.ball.diameter / 2) > game.me.x ||
-              game.ball.x + (game.ball.diameter / 2) > game.me.x + game.me.wd) {
-            sk.fill(255, 0, 180)
-            sk.textSize(34)
-            sk.text('you lost', 0, 100, sk.width)
-            sk.noLoop()
-            socket.emit('lost', 0)
+
+          // paddle missed, emit score
+          if (game.ball.x < game.me.x ||
+              game.ball.x > game.me.x + game.me.wd) {
+            game.me.health--
+            socket.emit('health', game.me.health)
           }
         }
       }
@@ -147,6 +161,13 @@ const myP5 = new p5(sk => {
         sk.fill(255, 0, 180)
         sk.textSize(34)
         sk.text('you won', 0, 100, sk.width)
+        sk.noLoop()
+      }
+
+      if (game.lost) {
+        sk.fill(255, 0, 180)
+        sk.textSize(34)
+        sk.text('you lost', 0, 100, sk.width)
         sk.noLoop()
       }
     }
@@ -204,6 +225,13 @@ const myP5 = new p5(sk => {
     [game.ball.xc, game.ball.yc, game.ball.x, game.ball.y] = ch.split(' ').map(v => parseInt(v))
   })
 
-  // socket on won
-  socket.on('won', _ => (game.won = true))
+  // socket on score
+  socket.on('health', h => {
+    game.opponent.health = parseInt(h)
+  })
+
+  // socket on lost
+  socket.on('lost', _ => {
+    game.won = true
+  })
 })
