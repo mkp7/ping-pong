@@ -41,7 +41,7 @@ const myP5 = new p5(sk => {
 
   sk.preload = function () {
     font = sk.loadFont('/public/neuropol-x-rg.ttf')
-    bg = sk.loadImage('/public/tram-stop.jpg')
+    bg = sk.loadImage('/public/cityscape.jpg')
   }
 
   sk.setup = () => {
@@ -57,23 +57,23 @@ const myP5 = new p5(sk => {
 
     if (!game.id) {
       sk.fill(255, 70, 255)
-      sk.textSize(34)
+      sk.textSize(38)
       sk.text('ping-pong', 0, 100, sk.width)
-      sk.textSize(28)
+      sk.textSize(34)
       sk.text('create a new game', 0, 180, sk.width)
       sk.text('or join an existing game', 0, 220, sk.width)
     } else if (!game.opponent) {
       sk.fill(255, 0, 180)
-      sk.textSize(34)
+      sk.textSize(38)
       sk.text('ping-pong', 0, 100, sk.width)
-      sk.textSize(28)
+      sk.textSize(34)
       sk.text(`the game id is ${game.id}`, 0, 180, sk.width)
       sk.text('waiting for player to join...', 0, 220, sk.width)
     } else if (!game.started) {
       sk.fill(255, 0, 180)
-      sk.textSize(34)
+      sk.textSize(38)
       sk.text('ping-pong', 0, 100, sk.width)
-      sk.textSize(28)
+      sk.textSize(34)
       sk.text('player joined', 0, 180, sk.width)
       const startingIn = parseInt((game.startTime - Date.now()) / 1000)
       sk.text(`game starts in ${startingIn} seconds...`, 0, 220, sk.width)
@@ -100,7 +100,7 @@ const myP5 = new p5(sk => {
         game.ball.yc *= -1
       }
 
-      sk.textSize(34)
+      sk.textSize(38)
       // my paddle
       sk.fill(160, 0, 160)
       sk.rect(0, game.me.y, gwidth, game.me.hg)
@@ -160,14 +160,14 @@ const myP5 = new p5(sk => {
 
       if (game.won) {
         sk.fill(255, 0, 180)
-        sk.textSize(34)
+        sk.textSize(38)
         sk.text('you won', 0, 100, sk.width)
         sk.noLoop()
       }
 
       if (game.lost) {
         sk.fill(255, 0, 180)
-        sk.textSize(34)
+        sk.textSize(38)
         sk.text('you lost', 0, 100, sk.width)
         sk.noLoop()
       }
