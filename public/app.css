@@ -1,4 +1,8 @@
 /* style.css */
+@font-face {
+  font-family: "Neuropol X";
+  src: url("/public/neuropol-x-rg.ttf");
+}
 
 html, body {
   height: 100%;
@@ -21,6 +25,18 @@ body {
   box-sizing: border-box;
   font-size: 16px;
   font-weight: bold;
+  font-family: 'Neuropol X';
+  background: rgb(44, 44, 44);
+  color: rgb(255, 0, 255);
+}
+
+button, input {
+  padding: 10px;
+  border: 1px dashed rgb(255, 0, 255);
+}
+
+canvas {
+  border: 1px dashed rgb(255, 0, 255);
 }
 
 #xdata {
@@ -30,7 +46,7 @@ body {
 }
 
 #xdata > * {
-  flex: 1
+  flex: 1;
 }
 
 /* #game-id, #new-game {

@@ -37,10 +37,11 @@ const myP5 = new p5(sk => {
       yc: 12
     }
   }
-  let font
+  let font, bg
 
   sk.preload = function () {
     font = sk.loadFont('/public/neuropol-x-rg.ttf')
+    bg = sk.loadImage('/public/tram-stop.jpg')
   }
 
   sk.setup = () => {
@@ -51,7 +52,7 @@ const myP5 = new p5(sk => {
   }
 
   sk.draw = () => {
-    sk.background(44)
+    sk.background(bg)
     sk.textAlign(sk.CENTER, sk.CENTER)
 
     if (!game.id) {
@@ -173,11 +174,17 @@ const myP5 = new p5(sk => {
     }
   }
 
-  // create a new game
+  // buttons
   const newGame = document.getElementById('new-game')
+  const enterGame = document.getElementById('enter-game')
+
+  // create a new game
   newGame.onclick = () => {
     // create a new game
     newGame.disabled = true
+    newGame.style.textDecoration = 'line-through'
+    enterGame.disabled = true
+    enterGame.style.textDecoration = 'line-through'
     socket.emit('newGame', 0)
   }
   socket.on('newGame', id => {
@@ -194,17 +201,22 @@ const myP5 = new p5(sk => {
   })
 
   // enter a game
-  const enterGame = document.getElementById('enter-game')
   enterGame.onclick = () => {
     // enter a game
     const id = document.getElementById('game-id').value
     socket.emit('enterGame', id)
     enterGame.disabled = true
+    enterGame.style.textDecoration = 'line-through'
+    newGame.disabled = true
+    newGame.style.textDecoration = 'line-through'
   }
   // invalid game id
   socket.on('invalidGame', _ => {
     console.log('invalid game id')
     enterGame.disabled = false
+    enterGame.style.textDecoration = 'none'
+    newGame.disabled = false
+    newGame.style.textDecoration = 'none'
   })
   socket.on('gameJoined', idTm => {
     // game joined, start game in s seconds
