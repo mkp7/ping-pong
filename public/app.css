@@ -25,7 +25,12 @@ body {
 
 #xdata {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  width: 640px;
+}
+
+#xdata > * {
+  flex: 1
 }
 
 /* #game-id, #new-game {
