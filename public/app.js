@@ -183,8 +183,10 @@ const myP5 = new p5(sk => {
     // create a new game
     newGame.disabled = true
     newGame.style.textDecoration = 'line-through'
+    newGame.style.color = 'rgba(255, 0, 255, 0.4)'
     enterGame.disabled = true
     enterGame.style.textDecoration = 'line-through'
+    enterGame.style.color = 'rgba(255, 0, 255, 0.4)'
     socket.emit('newGame', 0)
   }
   socket.on('newGame', id => {
@@ -207,16 +209,20 @@ const myP5 = new p5(sk => {
     socket.emit('enterGame', id)
     enterGame.disabled = true
     enterGame.style.textDecoration = 'line-through'
+    enterGame.style.color = 'rgba(255, 0, 255, 0.4)'
     newGame.disabled = true
     newGame.style.textDecoration = 'line-through'
+    newGame.style.color = 'rgba(255, 0, 255, 0.4)'
   }
   // invalid game id
   socket.on('invalidGame', _ => {
     console.log('invalid game id')
     enterGame.disabled = false
     enterGame.style.textDecoration = 'none'
+    enterGame.style.color = 'rgb(255, 0, 255)'
     newGame.disabled = false
     newGame.style.textDecoration = 'none'
+    newGame.style.color = 'rgb(255, 0, 255)'
   })
   socket.on('gameJoined', idTm => {
     // game joined, start game in s seconds
